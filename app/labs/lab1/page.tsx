@@ -4,6 +4,8 @@ export default function Lab1() {
       <h2>Lab 1</h2>
 
       <h3>Abdullahi Abdirahman</h3>
+      <p>Section 9</p>
+
 
       <a
         id="wd-github"
