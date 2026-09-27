@@ -12,13 +12,28 @@ export default function Labs() {
         id="wd-github"
         href="https://github.com/Abdullahi27/webdev-client"
         target="_blank"
+        rel="noreferrer"
       >
         GitHub Repository
       </a>
 
-      <br />
-
-      <Link href="/labs/lab1">Lab 1</Link>
+      <ul>
+        <li>
+          <Link href="/labs/lab1">Lab 1: HTML Examples</Link>
+        </li>
+        <li>
+          <Link href="/labs/lab2">Lab 2: CSS Basics</Link>
+        </li>
+        <li>
+          <Link href="/labs/lab3">Lab 3: JavaScript Fundamentals</Link>
+        </li>
+        <li>
+          <Link href="/labs/lab4">Lab 4</Link>
+        </li>
+        <li>
+          <Link href="/labs/lab5">Lab 5</Link>
+        </li>
+      </ul>
     </div>
   );
 }
