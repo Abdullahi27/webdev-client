@@ -1,3 +1,6 @@
+import HeadingTags from "./HeadingTags";
+import ParagraphTag from "./ParagraphTag";
+
 export default function Lab1() {
   return (
     <div id="wd-lab1">
@@ -14,6 +17,14 @@ export default function Lab1() {
       >
         GitHub Repository
       </a>
+
+      <h3>HTML Examples</h3>
+
+      <HeadingTags />
+      <ParagraphTag />
+
+
+
     </div>
   );
 }

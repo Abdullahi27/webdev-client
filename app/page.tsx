@@ -5,8 +5,8 @@ export default function Home() {
     <div>
       <h1>Welcome to Web Dev</h1>
 
-      <Link href="./labs/lab1">
-        Lab 1 - HTML
+      <Link href="/labs">
+        Labs
       </Link>
     </div>
   );
