@@ -2,10 +2,11 @@ import HeadingTags from "./HeadingTags";
 import ParagraphTag from "./ParagraphTag";
 import ListTags from "./ListTags";
 import Tables from "./Tables";
+import Images from "./Images";  
 
 
 export default function Lab1() {
-  return (
+  return ( 
     <div id="wd-lab1">
       <h2>Lab 1</h2>
 
@@ -27,6 +28,7 @@ export default function Lab1() {
       <ParagraphTag />
       <ListTags />
       <Tables />
+      <Images />
 
 
 
