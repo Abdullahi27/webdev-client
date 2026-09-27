@@ -106,9 +106,9 @@ export default function Tables() {
 
         <tbody>
           <tr>
-            <td>Monday</td>
+            <td>Tuesday</td>
             <td align="center">Web Development</td>
-            <td align="right">6:00 PM</td>
+            <td align="right">6:00 PM - 9:00 PM</td>
           </tr>
 
           <tr>
