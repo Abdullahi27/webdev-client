@@ -33,6 +33,66 @@ export default function Positions() {
           </div>
         </div>
       </div>
+
+      <div id="wd-css-position-absolute">
+        <h2>Absolute position</h2>
+
+        <div className="wd-pos-relative" style={{ height: 150 }}>
+          <div className="wd-pos-absolute-10-10 wd-bg-color-yellow wd-dimension-portrait">
+            Portrait
+          </div>
+
+          <div className="wd-pos-absolute-50-50 wd-bg-color-blue wd-fg-color-white wd-dimension-landscape">
+            Landscape
+          </div>
+
+          <div className="wd-pos-absolute-120-20 wd-bg-color-red wd-dimension-square">
+            Square
+          </div>
+
+          <div className="wd-your-pos-absolute-tr wd-bg-color-green wd-fg-color-white wd-dimension-square">
+            My absolute box
+          </div>
+
+          <div
+            id="wd-ai-absolute"
+            className="wd-ai-pos-absolute-br wd-bg-color-yellow wd-dimension-square"
+          >
+            AI absolute
+          </div>
+        </div>
+
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+      </div>
+
+      <div id="wd-css-position-fixed">
+        <h2>Fixed position</h2>
+
+        Checkout the blue square that says &quot;Fixed position&quot; stuck all
+        the way on the right and half way down the page. It doesn&apos;t scroll
+        with the rest of the page. Its position is &quot;Fixed&quot;.
+
+        <div className="wd-pos-fixed wd-dimension-square wd-bg-color-blue wd-fg-color-white">
+          Fixed position
+        </div>
+
+        <div className="wd-your-pos-fixed wd-bg-color-green wd-fg-color-white">
+          My fixed badge
+        </div>
+
+        <div
+          id="wd-ai-fixed"
+          className="wd-ai-pos-fixed wd-bg-color-red wd-fg-color-white"
+        >
+          AI fixed
+        </div>
+      </div>
     </div>
   );
 }

@@ -6,8 +6,15 @@ import Padding from "./Padding";
 import Margins from "./Margins";
 import BoxModel from "./BoxModel";
 import Corners from "./Corners";
+import Dimensions from "./Dimensions";
+import Display from "./Display";
 import Positions from "./Positions";
+import Zindex from "./Zindex";
+import Float from "./Float";
+import GridLayout from "./GridLayout";
+import Flex from "./Flex";
 import ReactIconsSampler from "./ReactIconsSampler";
+import MediaQueriesDemo from "./MediaQueriesDemo";
 
 export default function Lab2() {
   return (
@@ -132,8 +139,15 @@ export default function Lab2() {
       <Margins />
       <BoxModel />
       <Corners />
+      <Dimensions />
+      <Display />
       <Positions />
+      <Zindex />
+      <Float />
+      <GridLayout />
+      <Flex />
       <ReactIconsSampler />
+      <MediaQueriesDemo />
 
       <p>
         <a href="/labs/lab2/tailwind">Open Tailwind CSS lab →</a>
