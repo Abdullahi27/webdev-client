@@ -7,7 +7,7 @@ export default function Dashboard() {
 
       <hr />
 
-      <h2 id="wd-dashboard-published">Published Courses (3)</h2>
+      <h2 id="wd-dashboard-published">Published Courses (4)</h2>
 
       <hr />
 
