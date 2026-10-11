@@ -146,8 +146,9 @@ export default function Lab2() {
       <Float />
       <GridLayout />
       <Flex />
-      <ReactIconsSampler />
       <MediaQueriesDemo />
+      <ReactIconsSampler />
+      
 
       <p>
         <a href="/labs/lab2/tailwind">Open Tailwind CSS lab →</a>
