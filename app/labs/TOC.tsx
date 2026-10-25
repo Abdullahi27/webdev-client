@@ -38,7 +38,7 @@ export default function TOC() {
           Kambaz
         </Link>
       </li>
-      <li>Abdullahi</li>
+      <li>Abdullahi Abdirahman</li>
       <li>
         <Link href="/book/ch1" id="wd-toc-book-link">
           Chapter 1
