@@ -7,17 +7,17 @@ export default function QueryCalculator() {
 
   const aRaw = searchParams.get("a") || "0";
   const bRaw = searchParams.get("b") || "0";
-  const cRaw = searchParams.get("c") || "0";
 
   const a = parseFloat(aRaw);
   const b = parseFloat(bRaw);
-  const c = parseFloat(cRaw);
 
-  const sum = a + b + c;
+  const sum = a + b;
 
   return (
     <div id="wd-query-calculator">
-      <h1>Calculator – Query Parameters</h1>
+      <h1>
+        Calculator – Query Parameters
+      </h1>
 
       <p>
         Raw query values (already decoded by Next.js):
@@ -29,10 +29,6 @@ export default function QueryCalculator() {
 
       <p>
         b = <code>{bRaw}</code>
-      </p>
-
-      <p>
-        c = <code>{cRaw}</code>
       </p>
 
       <h2 className="text-green-700">

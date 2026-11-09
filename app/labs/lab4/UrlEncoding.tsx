@@ -18,7 +18,6 @@ export default function UrlEncoding() {
 
     params.set("a", a);
     params.set("b", b);
-    params.set("c", c);
 
     router.push(
       `${baseUrl}/query-params?${params.toString()}`
@@ -28,10 +27,9 @@ export default function UrlEncoding() {
   const goToPathVersion = () => {
     const safeA = encodeURIComponent(a);
     const safeB = encodeURIComponent(b);
-    const safeC = encodeURIComponent(c);
 
     router.push(
-      `${baseUrl}/path-params/${safeA}/${safeB}/${safeC}`
+      `${baseUrl}/path-params/${safeA}/${safeB}`
     );
   };
 
@@ -81,7 +79,7 @@ export default function UrlEncoding() {
         className="mb-2 w-full rounded bg-green-600 px-3 py-1.5 text-sm font-medium text-white"
         id="wd-url-query-programmatic"
       >
-        {a} + {b} + {c} → Query Params (programmatic)
+        {a} + {b} → Query Params (programmatic)
       </button>
 
       <button
@@ -90,7 +88,7 @@ export default function UrlEncoding() {
         className="mb-3 w-full rounded bg-green-600 px-3 py-1.5 text-sm font-medium text-white"
         id="wd-url-path-programmatic"
       >
-        {a} + {b} + {c} → Path Params (programmatic)
+        {a} + {b} → Path Params (programmatic)
       </button>
 
       <h4>
@@ -100,25 +98,21 @@ export default function UrlEncoding() {
       <Link
         href={`${baseUrl}/query-params?a=${encodeURIComponent(
           a
-        )}&b=${encodeURIComponent(
-          b
-        )}&c=${encodeURIComponent(c)}`}
+        )}&b=${encodeURIComponent(b)}`}
         className="mb-2 block w-full rounded bg-blue-600 px-3 py-1.5 text-center text-sm font-medium text-white no-underline"
         id="wd-url-query-link"
       >
-        {a} + {b} + {c} → Query Params (Link)
+        {a} + {b} → Query Params (Link)
       </Link>
 
       <Link
         href={`${baseUrl}/path-params/${encodeURIComponent(
           a
-        )}/${encodeURIComponent(
-          b
-        )}/${encodeURIComponent(c)}`}
+        )}/${encodeURIComponent(b)}`}
         className="mb-2 block w-full rounded bg-blue-600 px-3 py-1.5 text-center text-sm font-medium text-white no-underline"
         id="wd-url-path-link"
       >
-        {a} + {b} + {c} → Path Params (Link)
+        {a} + {b} → Path Params (Link)
       </Link>
 
       <hr />

@@ -37,8 +37,7 @@ export default function CoursesLayout({
 }>) {
   const { cid } = useParams();
 
-  const router =
-    useRouter();
+  const router = useRouter();
 
   const courseId =
     typeof cid === "string"
@@ -86,7 +85,7 @@ export default function CoursesLayout({
 
   useEffect(() => {
     if (
-      !currentUser ||
+      currentUser &&
       !isEnrolled
     ) {
       router.replace(
@@ -100,7 +99,7 @@ export default function CoursesLayout({
   ]);
 
   if (
-    !currentUser ||
+    currentUser &&
     !isEnrolled
   ) {
     return null;
