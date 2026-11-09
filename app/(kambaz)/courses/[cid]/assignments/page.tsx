@@ -1,24 +1,47 @@
+"use client";
+
 import {
   FaPlus,
   FaSearch,
 } from "react-icons/fa";
 
-import AssignmentItem from "./AssignmentItem";
-import * as db from "../../../database";
+import {
+  useParams,
+  useRouter,
+} from "next/navigation";
 
-export default async function Assignments({
-  params,
-}: {
-  params: Promise<{
-    cid: string;
-  }>;
-}) {
-  const { cid } = await params;
+import AssignmentItem from "./AssignmentItem";
+
+import {
+  useAssignmentsStore,
+} from "../../../store/assignmentsStore";
+
+export default function Assignments() {
+  const { cid } = useParams();
+
+  const courseId =
+    typeof cid === "string"
+      ? cid
+      : "";
+
+  const router = useRouter();
+
+  const allAssignments =
+    useAssignmentsStore(
+      (state) => state.assignments
+    );
+
+  const deleteAssignment =
+    useAssignmentsStore(
+      (state) =>
+        state.deleteAssignment
+    );
 
   const assignments =
-    db.assignments.filter(
+    allAssignments.filter(
       (assignment) =>
-        assignment.course === cid
+        assignment.course ===
+        courseId
     );
 
   return (
@@ -47,6 +70,11 @@ export default async function Assignments({
             id="wd-add-assignment"
             type="button"
             className="inline-flex items-center gap-1 rounded bg-red-600 px-3 py-1.5 text-sm font-medium text-white"
+            onClick={() =>
+              router.push(
+                `/courses/${courseId}/assignments/new`
+              )
+            }
           >
             <FaPlus /> Assignment
           </button>
@@ -77,10 +105,17 @@ export default async function Assignments({
           (assignment) => (
             <AssignmentItem
               key={assignment._id}
-              cid={cid}
+              cid={courseId}
               aid={assignment._id}
-              title={assignment.title}
+              title={
+                assignment.title
+              }
               details={`Multiple Modules | Not available until ${assignment.available} | Due ${assignment.due} | ${assignment.points} pts`}
+              onDelete={() =>
+                deleteAssignment(
+                  assignment._id
+                )
+              }
             />
           )
         )}

@@ -15,22 +15,25 @@ const LINKS = [
     id: "wd-lab1-link",
     label: "Lab 1",
     match: (p: string) =>
-      p.endsWith("/lab1") ||
-      p.includes("/lab1/"),
+      p.endsWith("/lab1") || p.includes("/lab1/"),
   },
   {
     href: "/labs/lab2",
     id: "wd-lab2-link",
     label: "Lab 2",
-    match: (p: string) =>
-      p.includes("/lab2"),
+    match: (p: string) => p.includes("/lab2"),
   },
   {
     href: "/labs/lab3",
     id: "wd-lab3-link",
     label: "Lab 3",
-    match: (p: string) =>
-      p.includes("/lab3"),
+    match: (p: string) => p.includes("/lab3"),
+  },
+  {
+    href: "/labs/lab4",
+    id: "wd-lab4-link",
+    label: "Lab 4",
+    match: (p: string) => p.includes("/lab4"),
   },
   {
     href: "/",
@@ -55,30 +58,20 @@ const activeStyle = {
 };
 
 export default function TOC() {
-  const pathname =
-    usePathname() ?? "";
+  const pathname = usePathname() ?? "";
 
   return (
     <ul>
       {LINKS.map((link) => {
-        const active =
-          link.match(pathname);
+        const active = link.match(pathname);
 
         return (
           <li key={link.id}>
             <Link
               href={link.href}
               id={link.id}
-              style={
-                active
-                  ? activeStyle
-                  : undefined
-              }
-              aria-current={
-                active
-                  ? "page"
-                  : undefined
-              }
+              style={active ? activeStyle : undefined}
+              aria-current={active ? "page" : undefined}
             >
               {link.label}
             </Link>
