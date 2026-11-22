@@ -51,6 +51,9 @@ const LINKS = [
 export default function TOC() {
   const pathname = usePathname();
 
+  const HTTP_SERVER =
+    process.env.NEXT_PUBLIC_HTTP_SERVER;
+
   return (
     <div id="wd-labs-toc">
       <h2>Labs</h2>
@@ -71,6 +74,18 @@ export default function TOC() {
             </Link>
           </li>
         ))}
+
+        <li>
+          <a href="https://github.com/Abdullahi27/webdev-server">
+            WebDev Server GitHub
+          </a>
+        </li>
+
+        <li>
+          <a href={HTTP_SERVER}>
+            WebDev Server
+          </a>
+        </li>
       </ul>
     </div>
   );
