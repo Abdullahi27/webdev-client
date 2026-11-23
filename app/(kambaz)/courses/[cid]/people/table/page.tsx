@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { FaUserCircle } from "react-icons/fa";
 
 import * as db from "../../../../database";
+import * as client from "../../../client";
 
 import {
   emptyUser,
@@ -41,12 +42,14 @@ export default function PeopleTable() {
 
   const enroll =
     useEnrollmentsStore(
-      (state) => state.enroll
+      (state) =>
+        state.enroll
     );
 
   const unenroll =
     useEnrollmentsStore(
-      (state) => state.unenroll
+      (state) =>
+        state.unenroll
     );
 
   const courseEnrollments =
@@ -65,43 +68,57 @@ export default function PeopleTable() {
       )
     );
 
-  const addUser = () => {
-    if (
-      user.firstName.trim() === "" ||
-      user.lastName.trim() === ""
-    ) {
-      return;
-    }
+  const addUser =
+    async () => {
+      if (
+        user.firstName.trim() === "" ||
+        user.lastName.trim() === ""
+      ) {
+        return;
+      }
 
-    const newUser: User = {
-      ...user,
-      _id:
-        crypto.randomUUID(),
+      const newUser: User = {
+        ...user,
+        _id:
+          crypto.randomUUID(),
+      };
+
+      setUsers([
+        ...users,
+        newUser,
+      ]);
+
+      const enrollment =
+        await client
+          .enrollIntoCourse(
+            newUser._id,
+            courseId
+          );
+
+      enroll(
+        enrollment
+      );
+
+      setUser({
+        ...emptyUser,
+      });
     };
 
-    setUsers([
-      ...users,
-      newUser,
-    ]);
+  const removeUser =
+    async (
+      userId: string
+    ) => {
+      await client
+        .unenrollFromCourse(
+          userId,
+          courseId
+        );
 
-    enroll(
-      newUser._id,
-      courseId
-    );
-
-    setUser({
-      ...emptyUser,
-    });
-  };
-
-  const removeUser = (
-    userId: string
-  ) => {
-    unenroll(
-      userId,
-      courseId
-    );
-  };
+      unenroll(
+        userId,
+        courseId
+      );
+    };
 
   return (
     <div
@@ -234,9 +251,7 @@ export default function PeopleTable() {
                 key={person._id}
                 className="border-b border-neutral-200 odd:bg-neutral-50"
               >
-                <td
-                  className="wd-full-name p-2"
-                >
+                <td className="wd-full-name p-2">
                   <div className="flex items-center gap-2">
                     <FaUserCircle className="text-2xl text-neutral-500" />
 
@@ -255,18 +270,22 @@ export default function PeopleTable() {
                   </div>
                 </td>
 
-                <td
-                  className="wd-login-id p-2"
-                >
-                  {person.loginId}
+                <td className="wd-login-id p-2">
+                  {
+                    person.loginId
+                  }
                 </td>
 
                 <td className="p-2">
-                  {person.section}
+                  {
+                    person.section
+                  }
                 </td>
 
                 <td className="p-2">
-                  {person.role}
+                  {
+                    person.role
+                  }
                 </td>
 
                 <td className="p-2">

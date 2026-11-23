@@ -1,6 +1,10 @@
 "use client";
 
 import {
+  useEffect,
+} from "react";
+
+import {
   FaPlus,
   FaSearch,
 } from "react-icons/fa";
@@ -16,19 +20,30 @@ import {
   useAssignmentsStore,
 } from "../../../store/assignmentsStore";
 
+import * as client from "../../client";
+
 export default function Assignments() {
-  const { cid } = useParams();
+  const { cid } =
+    useParams();
 
   const courseId =
     typeof cid === "string"
       ? cid
       : "";
 
-  const router = useRouter();
+  const router =
+    useRouter();
 
-  const allAssignments =
+  const assignments =
     useAssignmentsStore(
-      (state) => state.assignments
+      (state) =>
+        state.assignments
+    );
+
+  const setAssignments =
+    useAssignmentsStore(
+      (state) =>
+        state.setAssignments
     );
 
   const deleteAssignment =
@@ -37,12 +52,44 @@ export default function Assignments() {
         state.deleteAssignment
     );
 
-  const assignments =
-    allAssignments.filter(
-      (assignment) =>
-        assignment.course ===
-        courseId
-    );
+  useEffect(() => {
+    const load =
+      async () => {
+        if (!courseId) {
+          return;
+        }
+
+        const courseAssignments =
+          await client
+            .findAssignmentsForCourse(
+              courseId
+            );
+
+        setAssignments(
+          courseAssignments
+        );
+      };
+
+    load();
+  }, [
+    courseId,
+    setAssignments,
+  ]);
+
+  const onDeleteAssignment =
+    async (
+      assignmentId:
+        string
+    ) => {
+      await client
+        .deleteAssignment(
+          assignmentId
+        );
+
+      deleteAssignment(
+        assignmentId
+      );
+    };
 
   return (
     <div id="wd-assignments">
@@ -104,15 +151,21 @@ export default function Assignments() {
         {assignments.map(
           (assignment) => (
             <AssignmentItem
-              key={assignment._id}
-              cid={courseId}
-              aid={assignment._id}
+              key={
+                assignment._id
+              }
+              cid={
+                courseId
+              }
+              aid={
+                assignment._id
+              }
               title={
                 assignment.title
               }
               details={`Multiple Modules | Not available until ${assignment.available} | Due ${assignment.due} | ${assignment.points} pts`}
               onDelete={() =>
-                deleteAssignment(
+                onDeleteAssignment(
                   assignment._id
                 )
               }

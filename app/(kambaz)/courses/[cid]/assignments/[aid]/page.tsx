@@ -16,8 +16,13 @@ import {
   type Assignment,
 } from "../../../../store/assignmentsStore";
 
+import * as client from "../../../client";
+
 export default function AssignmentEditor() {
-  const { cid, aid } = useParams();
+  const {
+    cid,
+    aid,
+  } = useParams();
 
   const courseId =
     typeof cid === "string"
@@ -29,34 +34,76 @@ export default function AssignmentEditor() {
       ? aid
       : "";
 
-  const router = useRouter();
+  const router =
+    useRouter();
 
   const assignments =
     useAssignmentsStore(
-      (state) => state.assignments
+      (state) =>
+        state.assignments
+    );
+
+  const setAssignments =
+    useAssignmentsStore(
+      (state) =>
+        state.setAssignments
     );
 
   const addAssignment =
     useAssignmentsStore(
-      (state) => state.addAssignment
+      (state) =>
+        state.addAssignment
     );
 
   const updateAssignment =
     useAssignmentsStore(
-      (state) => state.updateAssignment
+      (state) =>
+        state.updateAssignment
     );
 
-  const [assignment, setAssignment] =
+  const [
+    assignment,
+    setAssignment,
+  ] =
     useState<Assignment>({
       ...emptyAssignment,
-      course: courseId,
+      course:
+        courseId,
     });
 
   useEffect(() => {
-    if (assignmentId === "new") {
+    const load =
+      async () => {
+        if (!courseId) {
+          return;
+        }
+
+        const courseAssignments =
+          await client
+            .findAssignmentsForCourse(
+              courseId
+            );
+
+        setAssignments(
+          courseAssignments
+        );
+      };
+
+    load();
+  }, [
+    courseId,
+    setAssignments,
+  ]);
+
+  useEffect(() => {
+    if (
+      assignmentId ===
+      "new"
+    ) {
       setAssignment({
         ...emptyAssignment,
-        course: courseId,
+        course:
+          courseId,
       });
 
       return;
@@ -65,11 +112,14 @@ export default function AssignmentEditor() {
     const existing =
       assignments.find(
         (item) =>
-          item._id === assignmentId
+          item._id ===
+          assignmentId
       );
 
     if (existing) {
-      setAssignment(existing);
+      setAssignment(
+        existing
+      );
     }
   }, [
     assignmentId,
@@ -77,20 +127,38 @@ export default function AssignmentEditor() {
     assignments,
   ]);
 
-  const save = () => {
-    if (assignmentId === "new") {
-      addAssignment({
-        ...assignment,
-        course: courseId,
-      });
-    } else {
-      updateAssignment(assignment);
-    }
+  const save =
+    async () => {
+      if (
+        assignmentId ===
+        "new"
+      ) {
+        const created =
+          await client
+            .createAssignmentForCourse(
+              courseId,
+              assignment
+            );
 
-    router.push(
-      `/courses/${courseId}/assignments`
-    );
-  };
+        addAssignment(
+          created
+        );
+      } else {
+        const saved =
+          await client
+            .updateAssignment(
+              assignment
+            );
+
+        updateAssignment(
+          saved
+        );
+      }
+
+      router.push(
+        `/courses/${courseId}/assignments`
+      );
+    };
 
   const cancel = () => {
     router.push(
@@ -104,7 +172,8 @@ export default function AssignmentEditor() {
       className="max-w-2xl"
     >
       <h2>
-        {assignmentId === "new"
+        {assignmentId ===
+        "new"
           ? "New Assignment"
           : "Edit Assignment"}
       </h2>
@@ -119,11 +188,14 @@ export default function AssignmentEditor() {
       <input
         id="wd-assignment-name"
         className="mb-3 block w-full rounded border border-neutral-300 px-3 py-2"
-        value={assignment.title}
+        value={
+          assignment.title
+        }
         onChange={(e) =>
           setAssignment({
             ...assignment,
-            title: e.target.value,
+            title:
+              e.target.value,
           })
         }
       />
@@ -139,7 +211,9 @@ export default function AssignmentEditor() {
         id="wd-assignment-description"
         className="mb-3 block w-full rounded border border-neutral-300 px-3 py-2"
         rows={5}
-        value={assignment.description}
+        value={
+          assignment.description
+        }
         onChange={(e) =>
           setAssignment({
             ...assignment,
@@ -160,7 +234,9 @@ export default function AssignmentEditor() {
         id="wd-assignment-points"
         type="number"
         className="mb-3 block w-full rounded border border-neutral-300 px-3 py-2"
-        value={assignment.points}
+        value={
+          assignment.points
+        }
         onChange={(e) =>
           setAssignment({
             ...assignment,
@@ -183,11 +259,14 @@ export default function AssignmentEditor() {
         id="wd-assignment-due-date"
         type="date"
         className="mb-3 block w-full rounded border border-neutral-300 px-3 py-2"
-        value={assignment.due}
+        value={
+          assignment.due
+        }
         onChange={(e) =>
           setAssignment({
             ...assignment,
-            due: e.target.value,
+            due:
+              e.target.value,
           })
         }
       />
@@ -203,7 +282,9 @@ export default function AssignmentEditor() {
         id="wd-assignment-available-from"
         type="date"
         className="mb-3 block w-full rounded border border-neutral-300 px-3 py-2"
-        value={assignment.available}
+        value={
+          assignment.available
+        }
         onChange={(e) =>
           setAssignment({
             ...assignment,
@@ -225,7 +306,8 @@ export default function AssignmentEditor() {
         type="date"
         className="mb-4 block w-full rounded border border-neutral-300 px-3 py-2"
         value={
-          assignment.until ?? ""
+          assignment.until ??
+          ""
         }
         onChange={(e) =>
           setAssignment({
@@ -239,7 +321,9 @@ export default function AssignmentEditor() {
       <div className="flex justify-end gap-2">
         <button
           type="button"
-          onClick={cancel}
+          onClick={
+            cancel
+          }
           id="wd-assignment-cancel"
           className="rounded border border-neutral-300 bg-white px-4 py-2"
         >
@@ -248,7 +332,9 @@ export default function AssignmentEditor() {
 
         <button
           type="button"
-          onClick={save}
+          onClick={
+            save
+          }
           id="wd-assignment-save"
           className="rounded bg-red-600 px-4 py-2 font-medium text-white"
         >

@@ -2,7 +2,6 @@ import Link from "next/link";
 import Image from "next/image";
 
 import {
-  useCoursesStore,
   type Course,
 } from "../store/coursesStore";
 
@@ -14,19 +13,17 @@ import {
   useEnrollmentsStore,
 } from "../store/enrollmentsStore";
 
+import * as client from "../courses/client";
+
 export default function CourseCard({
   course,
   onEdit,
+  onDelete,
 }: {
   course: Course;
   onEdit: () => void;
+  onDelete: () => void;
 }) {
-  const deleteCourse =
-    useCoursesStore(
-      (state) =>
-        state.deleteCourse
-    );
-
   const {
     currentUser,
   } = useAccountContext();
@@ -39,12 +36,14 @@ export default function CourseCard({
 
   const enroll =
     useEnrollmentsStore(
-      (state) => state.enroll
+      (state) =>
+        state.enroll
     );
 
   const unenroll =
     useEnrollmentsStore(
-      (state) => state.unenroll
+      (state) =>
+        state.unenroll
     );
 
   const enrolled =
@@ -57,6 +56,42 @@ export default function CourseCard({
               course._id
         )
       : false;
+
+  const onEnroll =
+    async () => {
+      if (!currentUser) {
+        return;
+      }
+
+      const enrollment =
+        await client
+          .enrollIntoCourse(
+            currentUser._id,
+            course._id
+          );
+
+      enroll(
+        enrollment
+      );
+    };
+
+  const onUnenroll =
+    async () => {
+      if (!currentUser) {
+        return;
+      }
+
+      await client
+        .unenrollFromCourse(
+          currentUser._id,
+          course._id
+        );
+
+      unenroll(
+        currentUser._id,
+        course._id
+      );
+    };
 
   return (
     <div className="wd-dashboard-course w-[300px] max-w-full overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-sm">
@@ -106,10 +141,7 @@ export default function CourseCard({
             className="ms-2 inline-flex items-center justify-center rounded bg-red-600 px-3 py-1.5 text-sm font-medium text-white"
             onClick={(event) => {
               event.preventDefault();
-
-              deleteCourse(
-                course._id
-              );
+              onDelete();
             }}
           >
             Delete
@@ -121,13 +153,12 @@ export default function CourseCard({
                 type="button"
                 id="wd-unenroll-course-click"
                 className="mt-2 rounded bg-red-600 px-3 py-1.5 text-sm font-medium text-white"
-                onClick={(event) => {
+                onClick={async (
+                  event
+                ) => {
                   event.preventDefault();
 
-                  unenroll(
-                    currentUser._id,
-                    course._id
-                  );
+                  await onUnenroll();
                 }}
               >
                 Unenroll
@@ -137,13 +168,12 @@ export default function CourseCard({
                 type="button"
                 id="wd-enroll-course-click"
                 className="mt-2 rounded bg-green-600 px-3 py-1.5 text-sm font-medium text-white"
-                onClick={(event) => {
+                onClick={async (
+                  event
+                ) => {
                   event.preventDefault();
 
-                  enroll(
-                    currentUser._id,
-                    course._id
-                  );
+                  await onEnroll();
                 }}
               >
                 Enroll

@@ -1,7 +1,14 @@
-import { ReactNode } from "react";
+import {
+  type ReactNode,
+} from "react";
+
 import KambazNavigation from "./Navigation";
-import { AccountProvider } from "./account/AccountContext";
-import "./kambaz.css";
+
+import {
+  AccountProvider,
+} from "./account/AccountContext";
+
+import Session from "./account/Session";
 
 export default function KambazLayout({
   children,
@@ -10,16 +17,15 @@ export default function KambazLayout({
 }>) {
   return (
     <AccountProvider>
-      <div
-        id="wd-kambaz"
-        className="font-sans"
-      >
-        <KambazNavigation />
+      <Session>
+        <div id="wd-kambaz">
+          <KambazNavigation />
 
-        <div className="wd-main-content-offset p-3">
-          {children}
+          <div className="p-3">
+            {children}
+          </div>
         </div>
-      </div>
+      </Session>
     </AccountProvider>
   );
 }

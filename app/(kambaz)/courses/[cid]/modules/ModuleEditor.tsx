@@ -1,17 +1,78 @@
-import { useState } from "react";
-import { FaPlus } from "react-icons/fa";
-import { useParams } from "next/navigation";
-import { useModulesStore } from "../../../store/modulesStore";
+import {
+  useState,
+} from "react";
+
+import {
+  FaPlus,
+} from "react-icons/fa";
+
+import {
+  useParams,
+} from "next/navigation";
+
+import {
+  useModulesStore,
+} from "../../../store/modulesStore";
+
+import * as client from "../../client";
 
 export default function ModuleEditor() {
-  const { cid } = useParams();
+  const { cid } =
+    useParams();
 
-  const [show, setShow] = useState(false);
-  const [moduleName, setModuleName] = useState("");
+  const courseId =
+    typeof cid === "string"
+      ? cid
+      : "";
 
-  const addModule = useModulesStore(
-    (state) => state.addModule
-  );
+  const [
+    show,
+    setShow,
+  ] =
+    useState(false);
+
+  const [
+    moduleName,
+    setModuleName,
+  ] =
+    useState("");
+
+  const addModule =
+    useModulesStore(
+      (state) =>
+        state.addModule
+    );
+
+  const onAddModule =
+    async () => {
+      if (
+        moduleName.trim() ===
+        ""
+      ) {
+        return;
+      }
+
+      if (!courseId) {
+        return;
+      }
+
+      const created =
+        await client
+          .createModuleForCourse(
+            courseId,
+            {
+              name:
+                moduleName,
+            }
+          );
+
+      addModule(
+        created
+      );
+
+      setModuleName("");
+      setShow(false);
+    };
 
   return (
     <>
@@ -19,7 +80,9 @@ export default function ModuleEditor() {
         type="button"
         className="inline-flex items-center gap-1 rounded border border-red-600 bg-red-600 px-3 py-1.5 text-sm font-medium text-white"
         id="wd-add-module-btn"
-        onClick={() => setShow(true)}
+        onClick={() =>
+          setShow(true)
+        }
       >
         <FaPlus /> Module
       </button>
@@ -37,7 +100,9 @@ export default function ModuleEditor() {
 
               <button
                 type="button"
-                onClick={() => setShow(false)}
+                onClick={() =>
+                  setShow(false)
+                }
                 className="text-2xl leading-none text-neutral-500"
                 aria-label="Close"
               >
@@ -48,9 +113,13 @@ export default function ModuleEditor() {
             <div className="px-4 py-3">
               <input
                 className="w-full rounded border border-neutral-300 px-3 py-1.5"
-                value={moduleName}
+                value={
+                  moduleName
+                }
                 onChange={(e) =>
-                  setModuleName(e.target.value)
+                  setModuleName(
+                    e.target.value
+                  )
                 }
                 id="wd-add-module-name"
                 placeholder="Module name"
@@ -60,7 +129,9 @@ export default function ModuleEditor() {
             <div className="flex justify-end gap-2 border-t border-neutral-200 px-4 py-3">
               <button
                 type="button"
-                onClick={() => setShow(false)}
+                onClick={() =>
+                  setShow(false)
+                }
                 className="rounded border border-neutral-300 bg-white px-3 py-1.5 text-sm"
                 id="wd-add-module-cancel"
               >
@@ -69,19 +140,9 @@ export default function ModuleEditor() {
 
               <button
                 type="button"
-                onClick={() => {
-                  if (moduleName.trim() === "") {
-                    return;
-                  }
-
-                  addModule({
-                    name: moduleName,
-                    course: String(cid),
-                  });
-
-                  setModuleName("");
-                  setShow(false);
-                }}
+                onClick={
+                  onAddModule
+                }
                 className="rounded bg-red-600 px-3 py-1.5 text-sm font-medium text-white"
                 id="wd-add-module-submit"
               >

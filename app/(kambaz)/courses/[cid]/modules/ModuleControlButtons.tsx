@@ -7,32 +7,57 @@ import {
 import { BsPlus } from "react-icons/bs";
 import { IoEllipsisVertical } from "react-icons/io5";
 
-import { useModulesStore } from "../../../store/modulesStore";
+import {
+  useModulesStore,
+} from "../../../store/modulesStore";
+
+import * as client from "../../client";
 
 export default function ModuleControlButtons({
   moduleId,
 }: {
   moduleId: string;
 }) {
-  const deleteModule = useModulesStore(
-    (state) => state.deleteModule
-  );
+  const deleteModule =
+    useModulesStore(
+      (state) =>
+        state.deleteModule
+    );
 
-  const editModule = useModulesStore(
-    (state) => state.editModule
-  );
+  const editModule =
+    useModulesStore(
+      (state) =>
+        state.editModule
+    );
+
+  const onRemoveModule =
+    async () => {
+      await client.deleteModule(
+        moduleId
+      );
+
+      deleteModule(
+        moduleId
+      );
+    };
 
   return (
     <div className="flex items-center gap-2">
       <FaPencilAlt
         className="cursor-pointer text-blue-600"
-        onClick={() => editModule(moduleId)}
+        onClick={() =>
+          editModule(
+            moduleId
+          )
+        }
         title="Edit module"
       />
 
       <FaTrash
         className="cursor-pointer text-red-600"
-        onClick={() => deleteModule(moduleId)}
+        onClick={
+          onRemoveModule
+        }
         title="Delete module"
       />
 

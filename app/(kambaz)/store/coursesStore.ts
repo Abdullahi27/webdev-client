@@ -23,6 +23,7 @@ type CoursesStore = {
   addCourse: (course: Course) => void;
   deleteCourse: (courseId: string) => void;
   updateCourse: (course: Course) => void;
+  setCourses: (courses: Course[]) => void;
 };
 
 export const useCoursesStore = create<CoursesStore>((set) => ({
@@ -32,11 +33,7 @@ export const useCoursesStore = create<CoursesStore>((set) => ({
     set((state) => ({
       courses: [
         ...state.courses,
-        {
-          ...emptyCourse,
-          ...course,
-          _id: crypto.randomUUID(),
-        },
+        course,
       ],
     })),
 
@@ -50,9 +47,14 @@ export const useCoursesStore = create<CoursesStore>((set) => ({
   updateCourse: (course) =>
     set((state) => ({
       courses: state.courses.map((c) =>
-        c._id === course._id ? course : c
+        c._id === course._id
+          ? course
+          : c
       ),
     })),
+
+  setCourses: (courses) =>
+    set({ courses }),
 }));
 
 export { emptyCourse };

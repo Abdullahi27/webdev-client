@@ -1,6 +1,9 @@
 "use client";
 
-import { create } from "zustand";
+import {
+  create,
+} from "zustand";
+
 import enrollmentsJson from "../database/enrollments.json";
 
 export type Enrollment =
@@ -8,13 +11,18 @@ export type Enrollment =
 
 type EnrollmentsStore = {
   enrollments: Enrollment[];
+
   enroll: (
-    userId: string,
-    courseId: string
+    enrollment: Enrollment
   ) => void;
+
   unenroll: (
     userId: string,
     courseId: string
+  ) => void;
+
+  setEnrollments: (
+    enrollments: Enrollment[]
   ) => void;
 };
 
@@ -25,17 +33,16 @@ export const useEnrollmentsStore =
         enrollmentsJson as Enrollment[],
 
       enroll: (
-        userId,
-        courseId
+        enrollment
       ) =>
         set((state) => {
           const alreadyEnrolled =
             state.enrollments.some(
-              (enrollment) =>
-                enrollment.user ===
-                  userId &&
-                enrollment.course ===
-                  courseId
+              (current) =>
+                current.user ===
+                  enrollment.user &&
+                current.course ===
+                  enrollment.course
             );
 
           if (alreadyEnrolled) {
@@ -45,12 +52,7 @@ export const useEnrollmentsStore =
           return {
             enrollments: [
               ...state.enrollments,
-              {
-                _id:
-                  crypto.randomUUID(),
-                user: userId,
-                course: courseId,
-              },
+              enrollment,
             ],
           };
         }),
@@ -71,5 +73,12 @@ export const useEnrollmentsStore =
                 )
             ),
         })),
+
+      setEnrollments: (
+        enrollments
+      ) =>
+        set({
+          enrollments,
+        }),
     })
   );

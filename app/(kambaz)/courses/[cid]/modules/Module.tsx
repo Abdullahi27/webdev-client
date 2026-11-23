@@ -6,14 +6,32 @@ import {
   type CourseModule,
 } from "../../../store/modulesStore";
 
+import * as client from "../../client";
+
 export default function Module({
   module,
 }: {
   module: CourseModule;
 }) {
-  const updateModule = useModulesStore(
-    (state) => state.updateModule
-  );
+  const updateModule =
+    useModulesStore(
+      (state) =>
+        state.updateModule
+    );
+
+  const onUpdateModule =
+    async (
+      updatedModule: CourseModule
+    ) => {
+      const saved =
+        await client.updateModule(
+          updatedModule
+        );
+
+      updateModule(
+        saved
+      );
+    };
 
   return (
     <li className="wd-module mb-4 list-none border border-neutral-300">
@@ -22,18 +40,27 @@ export default function Module({
           {module.editing ? (
             <input
               className="w-1/2 rounded border border-neutral-300 px-2 py-1 text-base"
-              defaultValue={module.name}
+              defaultValue={
+                module.name
+              }
               onChange={(e) =>
                 updateModule({
                   ...module,
-                  name: e.target.value,
+                  name:
+                    e.target.value,
                 })
               }
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  updateModule({
+              onKeyDown={async (
+                e
+              ) => {
+                if (
+                  e.key ===
+                  "Enter"
+                ) {
+                  await onUpdateModule({
                     ...module,
-                    editing: false,
+                    editing:
+                      false,
                   });
                 }
               }}
@@ -44,17 +71,25 @@ export default function Module({
         </div>
 
         <ModuleControlButtons
-          moduleId={module._id}
+          moduleId={
+            module._id
+          }
         />
       </div>
 
       <ul className="m-0 list-none p-0">
-        {module.lessons?.map((lesson) => (
-          <Lesson
-            key={lesson._id}
-            title={lesson.name}
-          />
-        ))}
+        {module.lessons?.map(
+          (lesson) => (
+            <Lesson
+              key={
+                lesson._id
+              }
+              title={
+                lesson.name
+              }
+            />
+          )
+        )}
       </ul>
     </li>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  useEffect,
   useState,
 } from "react";
 
@@ -11,14 +12,12 @@ import {
 } from "../account/AccountContext";
 
 import {
-  useEnrollmentsStore,
-} from "../store/enrollmentsStore";
-
-import {
   emptyCourse,
   useCoursesStore,
   type Course,
 } from "../store/coursesStore";
+
+import * as client from "../courses/client";
 
 export default function Dashboard() {
   const courses =
@@ -27,10 +26,22 @@ export default function Dashboard() {
         state.courses
     );
 
+  const setCourses =
+    useCoursesStore(
+      (state) =>
+        state.setCourses
+    );
+
   const addCourse =
     useCoursesStore(
       (state) =>
         state.addCourse
+    );
+
+  const deleteCourse =
+    useCoursesStore(
+      (state) =>
+        state.deleteCourse
     );
 
   const updateCourse =
@@ -54,29 +65,84 @@ export default function Dashboard() {
     currentUser,
   } = useAccountContext();
 
-  const enrollments =
-    useEnrollmentsStore(
-      (state) =>
-        state.enrollments
-    );
+  useEffect(() => {
+    const loadCourses =
+      async () => {
+        try {
+          if (
+            showAllCourses
+          ) {
+            const allCourses =
+              await client
+                .fetchAllCourses();
 
-  const enrolledCourses =
-    currentUser
-      ? courses.filter((c) =>
-          enrollments.some(
-            (enrollment) =>
-              enrollment.user ===
-                currentUser._id &&
-              enrollment.course ===
-                c._id
-          )
-        )
-      : courses;
+            setCourses(
+              allCourses
+            );
+          } else if (
+            currentUser
+          ) {
+            const myCourses =
+              await client
+                .findMyCourses();
 
-  const visibleCourses =
-    showAllCourses
-      ? courses
-      : enrolledCourses;
+            setCourses(
+              myCourses
+            );
+          } else {
+            setCourses([]);
+          }
+        } catch {
+          setCourses([]);
+        }
+      };
+
+    loadCourses();
+  }, [
+    currentUser,
+    showAllCourses,
+    setCourses,
+  ]);
+
+  const onAddCourse =
+    async () => {
+      const newCourse =
+        await client
+          .createCourse(
+            course
+          );
+
+      addCourse(
+        newCourse
+      );
+    };
+
+  const onDeleteCourse =
+    async (
+      courseId: string
+    ) => {
+      await client
+        .deleteCourse(
+          courseId
+        );
+
+      deleteCourse(
+        courseId
+      );
+    };
+
+  const onUpdateCourse =
+    async () => {
+      const saved =
+        await client
+          .updateCourse(
+            course
+          );
+
+      updateCourse(
+        saved
+      );
+    };
 
   return (
     <div id="wd-dashboard">
@@ -108,8 +174,8 @@ export default function Dashboard() {
           type="button"
           className="rounded bg-blue-600 px-3 py-1.5 text-sm font-medium text-white"
           id="wd-add-new-course-click"
-          onClick={() =>
-            addCourse(course)
+          onClick={
+            onAddCourse
           }
         >
           Add
@@ -119,8 +185,8 @@ export default function Dashboard() {
           type="button"
           className="rounded bg-yellow-400 px-3 py-1.5 text-sm font-medium"
           id="wd-update-course-click"
-          onClick={() =>
-            updateCourse(course)
+          onClick={
+            onUpdateCourse
           }
         >
           Update
@@ -129,7 +195,9 @@ export default function Dashboard() {
 
       <input
         className="mb-2 mt-2 block w-full max-w-xl rounded border border-neutral-300 px-3 py-1.5"
-        value={course.name}
+        value={
+          course.name
+        }
         onChange={(e) =>
           setCourse({
             ...course,
@@ -158,7 +226,9 @@ export default function Dashboard() {
 
       <input
         className="mb-2 block w-full max-w-xl rounded border border-neutral-300 px-3 py-1.5"
-        value={course.number}
+        value={
+          course.number
+        }
         onChange={(e) =>
           setCourse({
             ...course,
@@ -189,7 +259,7 @@ export default function Dashboard() {
 
       <h2 id="wd-dashboard-published">
         Published Courses (
-        {visibleCourses.length})
+        {courses.length})
       </h2>
 
       <hr />
@@ -198,13 +268,22 @@ export default function Dashboard() {
         id="wd-dashboard-courses"
         className="grid grid-cols-1 gap-8 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
       >
-        {visibleCourses.map(
+        {courses.map(
           (c) => (
             <CourseCard
-              key={c._id}
+              key={
+                c._id
+              }
               course={c}
               onEdit={() =>
-                setCourse(c)
+                setCourse(
+                  c
+                )
+              }
+              onDelete={() =>
+                onDeleteCourse(
+                  c._id
+                )
               }
             />
           )
