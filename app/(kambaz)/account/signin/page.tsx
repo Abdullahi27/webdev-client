@@ -1,16 +1,30 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import {
+  useState,
+} from "react";
 
-import * as db from "../../database";
+import Link from "next/link";
+
+import {
+  useRouter,
+} from "next/navigation";
 
 import {
   useAccountContext,
 } from "../AccountContext";
 
+import * as client from "../client";
+
 export default function Signin() {
+  const router =
+    useRouter();
+
+  const {
+    setCurrentUser,
+  } =
+    useAccountContext();
+
   const [
     credentials,
     setCredentials,
@@ -19,71 +33,71 @@ export default function Signin() {
     password: "",
   });
 
-  const {
-    setCurrentUser,
-  } = useAccountContext();
+  const signin =
+    async () => {
+      const user =
+        await client.signin(
+          credentials
+        );
 
-  const router = useRouter();
+      if (!user) {
+        return;
+      }
 
-  const signin = () => {
-    const user = db.users.find(
-      (u) =>
-        u.username ===
-          credentials.username &&
-        u.password ===
-          credentials.password
-    );
+      setCurrentUser(user);
 
-    if (!user) {
-      return;
-    }
-
-    setCurrentUser(user);
-
-    router.push("/dashboard");
-  };
+      router.push(
+        "/dashboard"
+      );
+    };
 
   return (
     <div id="wd-signin-screen">
-      <h3>Sign in</h3>
+      <h1>Sign in</h1>
 
       <input
+        value={
+          credentials.username
+        }
+        onChange={(e) =>
+          setCredentials({
+            ...credentials,
+            username:
+              e.target.value,
+          })
+        }
         placeholder="username"
-        id="wd-username"
-        value={credentials.username}
-        onChange={(e) =>
-          setCredentials({
-            ...credentials,
-            username: e.target.value,
-          })
-        }
       />
 
+      <br />
+
       <input
-        placeholder="password"
         type="password"
-        id="wd-password"
-        value={credentials.password}
+        value={
+          credentials.password
+        }
         onChange={(e) =>
           setCredentials({
             ...credentials,
-            password: e.target.value,
+            password:
+              e.target.value,
           })
         }
+        placeholder="password"
       />
+
+      <br />
 
       <button
         type="button"
         onClick={signin}
-        id="wd-signin-btn"
       >
         Sign in
       </button>
 
-      <Link
-        href="/account/signup"
-        id="wd-signup-link"
-      >
+      <br />
+
+      <Link href="/account/signup">
         Sign up
       </Link>
     </div>

@@ -10,139 +10,166 @@ import {
 } from "next/navigation";
 
 import {
+  emptyUser,
   useAccountContext,
-  type User,
 } from "../AccountContext";
 
+import * as client from "../client";
+
 export default function Profile() {
-  const [profile, setProfile] =
-    useState<User | null>(null);
+  const router =
+    useRouter();
 
   const {
     currentUser,
     setCurrentUser,
-  } = useAccountContext();
+  } =
+    useAccountContext();
 
-  const router = useRouter();
+  const [
+    profile,
+    setProfile,
+  ] = useState(
+    currentUser ||
+      emptyUser
+  );
 
   useEffect(() => {
-    if (!currentUser) {
-      router.push("/account/signin");
-      return;
+    if (currentUser) {
+      setProfile(
+        currentUser
+      );
     }
+  }, [currentUser]);
 
-    setProfile(currentUser);
-  }, [currentUser, router]);
+  const updateProfile =
+    async () => {
+      const user =
+        await client.updateUser(
+          profile
+        );
 
-  const signout = () => {
-    setCurrentUser(null);
-    router.push("/account/signin");
-  };
+      setCurrentUser(user);
+      setProfile(user);
+    };
 
-  if (!profile) {
-    return null;
-  }
+  const signout =
+    async () => {
+      await client.signout();
+
+      setCurrentUser(null);
+
+      router.push(
+        "/account/signin"
+      );
+    };
 
   return (
     <div id="wd-profile-screen">
-      <h3>Profile</h3>
+      <h1>Profile</h1>
 
       <input
-        id="wd-username"
+        value={
+          profile.username
+        }
+        onChange={(e) =>
+          setProfile({
+            ...profile,
+            username:
+              e.target.value,
+          })
+        }
         placeholder="username"
-        value={profile.username}
-        onChange={(e) =>
-          setProfile({
-            ...profile,
-            username: e.target.value,
-          })
-        }
       />
 
       <br />
 
       <input
-        id="wd-password"
+        value={
+          profile.password
+        }
+        onChange={(e) =>
+          setProfile({
+            ...profile,
+            password:
+              e.target.value,
+          })
+        }
         placeholder="password"
-        type="password"
-        value={profile.password}
-        onChange={(e) =>
-          setProfile({
-            ...profile,
-            password: e.target.value,
-          })
-        }
       />
 
       <br />
 
       <input
-        id="wd-firstname"
-        placeholder="First Name"
-        value={profile.firstName}
+        value={
+          profile.firstName
+        }
         onChange={(e) =>
           setProfile({
             ...profile,
-            firstName: e.target.value,
+            firstName:
+              e.target.value,
           })
         }
+        placeholder="first name"
       />
 
       <br />
 
       <input
-        id="wd-lastname"
-        placeholder="Last Name"
-        value={profile.lastName}
+        value={
+          profile.lastName
+        }
         onChange={(e) =>
           setProfile({
             ...profile,
-            lastName: e.target.value,
+            lastName:
+              e.target.value,
           })
         }
+        placeholder="last name"
       />
 
       <br />
 
       <input
-        id="wd-email"
+        value={
+          profile.email
+        }
+        onChange={(e) =>
+          setProfile({
+            ...profile,
+            email:
+              e.target.value,
+          })
+        }
         placeholder="email"
-        type="email"
-        value={profile.email}
-        onChange={(e) =>
-          setProfile({
-            ...profile,
-            email: e.target.value,
-          })
-        }
       />
 
       <br />
 
       <select
-        id="wd-role"
-        value={profile.role}
+        value={
+          profile.role
+        }
         onChange={(e) =>
           setProfile({
             ...profile,
-            role: e.target.value as User["role"],
+            role:
+              e.target.value,
           })
         }
       >
-        <option value="USER">
-          User
-        </option>
-
-        <option value="ADMIN">
-          Admin
+        <option value="STUDENT">
+          Student
         </option>
 
         <option value="FACULTY">
           Faculty
         </option>
 
-        <option value="STUDENT">
-          Student
+        <option value="ADMIN">
+          Admin
         </option>
       </select>
 
@@ -150,8 +177,16 @@ export default function Profile() {
 
       <button
         type="button"
+        onClick={
+          updateProfile
+        }
+      >
+        Update
+      </button>
+
+      <button
+        type="button"
         onClick={signout}
-        id="wd-signout-btn"
       >
         Sign out
       </button>
